@@ -1,13 +1,22 @@
 import { StatusCodes } from 'http-status-codes';
 import { prisma } from '../config/prisma.js';
 import { catchAsync } from '../utils/catchAsync.js';
+import { sendAdminContactNotification } from '../utils/mailer.js';
 
 export const createMessage = catchAsync(async (req, res) => {
   const message = await prisma.contactMessage.create({ data: req.validated.body });
+  let mailWarning = '';
+
+  try {
+    await sendAdminContactNotification(req.validated.body);
+  } catch (error) {
+    console.error('Admin contact notification failed:', error.message);
+    mailWarning = ' Message saved, but email notification could not be sent.';
+  }
 
   res.status(StatusCodes.CREATED).json({
     success: true,
-    message: 'Message sent successfully',
+    message: `Message sent successfully.${mailWarning}`,
     data: message
   });
 });

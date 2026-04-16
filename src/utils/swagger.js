@@ -1,26 +1,170 @@
-import swaggerJsdoc from 'swagger-jsdoc';
-import swaggerUi from 'swagger-ui-express';
+import swaggerJsdoc from "swagger-jsdoc";
+import swaggerUi from "swagger-ui-express";
 
 const options = {
   definition: {
-    openapi: '3.0.0',
+    openapi: "3.0.0",
     info: {
-      title: 'Developer Portfolio API',
-      version: '1.0.0',
-      description: 'Starter backend API for portfolio website and admin panel'
+      title: "Developer Portfolio API",
+      version: "1.0.0",
+      description: "Starter backend API for portfolio website and admin panel",
     },
-    servers: [{ url: 'http://localhost:5000' }],
+    servers: [{ url: "http://localhost:5000" }],
     components: {
       securitySchemes: {
         bearerAuth: {
-          type: 'http',
-          scheme: 'bearer',
-          bearerFormat: 'JWT'
-        }
-      }
-    }
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
+      schemas: {
+        Project: {
+          type: "object",
+          properties: {
+            id: { type: "string" },
+            title: { type: "string" },
+            slug: { type: "string" },
+            subTitle: { type: "string" },
+            summary: { type: "string" },
+            description: { type: "string" },
+            imageUrl: { type: "string" },
+            liveUrl: { type: "string" },
+            repoUrl: { type: "string" },
+            frontendRepoUrl: { type: "string" },
+            backendRepoUrl: { type: "string" },
+            additionalLinks: { type: "object" },
+            featured: { type: "boolean" },
+            sortOrder: { type: "integer" },
+            technology: { type: "array", items: { type: "string" } },
+            skills: { type: "array", items: { type: "string" } },
+            createdAt: { type: "string", format: "date-time" },
+            updatedAt: { type: "string", format: "date-time" },
+          },
+        },
+        Skill: {
+          type: "object",
+          properties: {
+            id: { type: "string" },
+            name: { type: "string" },
+            category: { type: "string" },
+            level: { type: "integer" },
+            icon: { type: "string" },
+            sortOrder: { type: "integer" },
+            createdAt: { type: "string", format: "date-time" },
+            updatedAt: { type: "string", format: "date-time" },
+          },
+        },
+        Experience: {
+          type: "object",
+          properties: {
+            id: { type: "string" },
+            company: { type: "string" },
+            position: { type: "string" },
+            department: { type: "string" },
+            startDate: { type: "string", format: "date-time" },
+            endDate: { type: "string", format: "date-time" },
+            isCurrent: { type: "boolean" },
+            description: { type: "string" },
+            sortOrder: { type: "integer" },
+            createdAt: { type: "string", format: "date-time" },
+            updatedAt: { type: "string", format: "date-time" },
+          },
+        },
+        Education: {
+          type: "object",
+          properties: {
+            id: { type: "string" },
+            institute: { type: "string" },
+            degree: { type: "string" },
+            fieldOfStudy: { type: "string" },
+            startDate: { type: "string", format: "date-time" },
+            endDate: { type: "string", format: "date-time" },
+            grade: { type: "string" },
+            description: { type: "string" },
+            sortOrder: { type: "integer" },
+            createdAt: { type: "string", format: "date-time" },
+            updatedAt: { type: "string", format: "date-time" },
+          },
+        },
+        BlogPost: {
+          type: "object",
+          properties: {
+            id: { type: "string" },
+            title: { type: "string" },
+            slug: { type: "string" },
+            subTitle: { type: "string" },
+            excerpt: { type: "string" },
+            content: { type: "string" },
+            coverImage: { type: "string" },
+            tags: { type: "array", items: { type: "string" } },
+            published: { type: "boolean" },
+            publishedAt: { type: "string", format: "date-time" },
+            createdAt: { type: "string", format: "date-time" },
+            updatedAt: { type: "string", format: "date-time" },
+          },
+        },
+        Service: {
+          type: "object",
+          properties: {
+            id: { type: "string" },
+            imageUrl: { type: "string" },
+            title: { type: "string" },
+            description: { type: "string" },
+            sortOrder: { type: "integer" },
+            createdAt: { type: "string", format: "date-time" },
+            updatedAt: { type: "string", format: "date-time" },
+          },
+        },
+        Review: {
+          type: "object",
+          properties: {
+            id: { type: "string" },
+            review: { type: "string" },
+            rating: { type: "integer" },
+            reviewerName: { type: "string" },
+            reviewerTitle: { type: "string" },
+            officeName: { type: "string" },
+            sortOrder: { type: "integer" },
+            createdAt: { type: "string", format: "date-time" },
+            updatedAt: { type: "string", format: "date-time" },
+          },
+        },
+        SiteSetting: {
+          type: "object",
+          properties: {
+            siteTitle: { type: "string" },
+            logoUrl: { type: "string" },
+            fullName: { type: "string" },
+            jobTitle: { type: "string" },
+            homeDescription: { type: "string" },
+            heroTitle: { type: "string" },
+            heroSubtitle: { type: "string" },
+            aboutTitle: { type: "string" },
+            aboutDescription: { type: "string" },
+            aboutDetails: { type: "string" },
+            aboutText: { type: "string" },
+            aboutImageUrl: { type: "string" },
+            aboutImageLgUrl: { type: "string" },
+            cvUrl: { type: "string" },
+            githubUrl: { type: "string" },
+            linkedinUrl: { type: "string" },
+            facebookUrl: { type: "string" },
+            twitterUrl: { type: "string" },
+            instagramUrl: { type: "string" },
+            youtubeUrl: { type: "string" },
+            email: { type: "string" },
+            phone: { type: "string" },
+            phoneNumbers: { type: "array", items: { type: "string" } },
+            emailAddresses: { type: "array", items: { type: "string" } },
+            location: { type: "string" },
+            contactDescription: { type: "string" },
+          },
+        },
+      },
+    },
   },
-  apis: ['./src/routes/*.js']
+  apis: ["./src/routes/*.js"],
 };
 
 export const swaggerSpec = swaggerJsdoc(options);
