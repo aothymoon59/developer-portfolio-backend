@@ -1,0 +1,2 @@
+-- This migration was generated against columns introduced in a later migration.
+-- Keeping it as a no-op preserves migration history while allowing shadow database creation.

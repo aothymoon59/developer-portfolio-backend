@@ -1,0 +1,4 @@
+-- This migration became invalid after the admin content model was reordered.
+-- The referenced columns are introduced in a later migration
+-- (20260416110000_expand_admin_content_model), so this step must remain a no-op
+-- for clean shadow database creation.
