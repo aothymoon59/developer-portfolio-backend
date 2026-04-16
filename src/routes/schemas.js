@@ -120,7 +120,7 @@ export const experienceSchema = z.object({
     endDate: nullableDate,
     isCurrent: z.boolean().optional().default(false),
     description: z.string().min(10),
-    technologies: stringArray,
+    department: optionalString,
     sortOrder: z.number().int().optional().default(0),
   }),
 });
@@ -162,7 +162,6 @@ export const blogSchema = z.object({
   body: z.object({
     title: z.string().min(2),
     slug: z.string().min(2),
-    subTitle: z.string().min(2),
     excerpt: z.string().min(10),
     content: z.string().min(10),
     coverImage: optionalUrl,

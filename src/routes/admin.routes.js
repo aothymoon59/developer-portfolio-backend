@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router } from "express";
 import {
   createBlog,
   createEducation,
@@ -35,22 +35,22 @@ import {
   updateService,
   updateSiteSetting,
   updateSystemSetting,
-  updateSkill
-} from '../controllers/admin.controller.js';
-import { uploadImage } from '../controllers/upload.controller.js';
-import { protect } from '../middlewares/auth.js';
+  updateSkill,
+} from "../controllers/admin.controller.js";
+import { uploadImage } from "../controllers/upload.controller.js";
+import { protect } from "../middlewares/auth.js";
 import {
   normalizeBlogMultipart,
   normalizeProjectMultipart,
   normalizeServiceMultipart,
-  normalizeSettingsMultipart
-} from '../middlewares/multipart.js';
+  normalizeSettingsMultipart,
+} from "../middlewares/multipart.js";
 import {
   createImageFieldsUpload,
   mapUploadedImages,
-  uploadSingleImage
-} from '../middlewares/upload.js';
-import { validate } from '../middlewares/validate.js';
+  uploadSingleImage,
+} from "../middlewares/upload.js";
+import { validate } from "../middlewares/validate.js";
 import {
   aboutContentSchema,
   blogSchema,
@@ -62,8 +62,8 @@ import {
   serviceSchema,
   siteSettingSchema,
   systemSettingSchema,
-  skillSchema
-} from './schemas.js';
+  skillSchema,
+} from "./schemas.js";
 
 const router = Router();
 
@@ -175,6 +175,8 @@ const router = Router();
  *           type: string
  *         position:
  *           type: string
+ *         department:
+ *           type: string
  *         startDate:
  *           type: string
  *           format: date-time
@@ -185,10 +187,6 @@ const router = Router();
  *           type: boolean
  *         description:
  *           type: string
- *         technologies:
- *           type: array
- *           items:
- *             type: string
  *         sortOrder:
  *           type: integer
  *     Education:
@@ -337,7 +335,7 @@ router.use(protect);
  *                 type: string
  *                 format: binary
  */
-router.post('/upload', uploadSingleImage, uploadImage);
+router.post("/upload", uploadSingleImage, uploadImage);
 
 /**
  * @swagger
@@ -351,7 +349,7 @@ router.post('/upload', uploadSingleImage, uploadImage);
  *       200:
  *         description: Dashboard data returned successfully
  */
-router.get('/dashboard', getDashboardStats);
+router.get("/dashboard", getDashboardStats);
 
 /**
  * @swagger
@@ -373,8 +371,8 @@ router.get('/dashboard', getDashboardStats);
  *           schema:
  *             $ref: '#/components/schemas/HomeContent'
  */
-router.get('/home', getHomeContent);
-router.put('/home', validate(homeContentSchema), updateHomeContent);
+router.get("/home", getHomeContent);
+router.put("/home", validate(homeContentSchema), updateHomeContent);
 
 /**
  * @swagger
@@ -396,43 +394,43 @@ router.put('/home', validate(homeContentSchema), updateHomeContent);
  *           schema:
  *             $ref: '#/components/schemas/AboutContent'
  */
-router.get('/about', getAboutContent);
+router.get("/about", getAboutContent);
 router.put(
-  '/about',
+  "/about",
   createImageFieldsUpload([
-    { name: 'aboutImage', maxCount: 1 },
-    { name: 'aboutImageLg', maxCount: 1 }
+    { name: "aboutImage", maxCount: 1 },
+    { name: "aboutImageLg", maxCount: 1 },
   ]),
   mapUploadedImages(
     {
-      aboutImage: 'aboutImageUrl',
-      aboutImageLg: 'aboutImageLgUrl'
+      aboutImage: "aboutImageUrl",
+      aboutImageLg: "aboutImageLgUrl",
     },
-    'about'
+    "about",
   ),
   validate(aboutContentSchema),
-  updateAboutContent
+  updateAboutContent,
 );
 router.post(
-  '/about/services',
-  createImageFieldsUpload([{ name: 'image', maxCount: 1 }]),
-  mapUploadedImages({ image: 'imageUrl' }, 'services'),
+  "/about/services",
+  createImageFieldsUpload([{ name: "image", maxCount: 1 }]),
+  mapUploadedImages({ image: "imageUrl" }, "services"),
   normalizeServiceMultipart,
   validate(serviceSchema),
-  createService
+  createService,
 );
 router.put(
-  '/about/services/:id',
-  createImageFieldsUpload([{ name: 'image', maxCount: 1 }]),
-  mapUploadedImages({ image: 'imageUrl' }, 'services'),
+  "/about/services/:id",
+  createImageFieldsUpload([{ name: "image", maxCount: 1 }]),
+  mapUploadedImages({ image: "imageUrl" }, "services"),
   normalizeServiceMultipart,
   validate(serviceSchema),
-  updateService
+  updateService,
 );
-router.delete('/about/services/:id', deleteService);
-router.post('/about/reviews', validate(reviewSchema), createReview);
-router.put('/about/reviews/:id', validate(reviewSchema), updateReview);
-router.delete('/about/reviews/:id', deleteReview);
+router.delete("/about/services/:id", deleteService);
+router.post("/about/reviews", validate(reviewSchema), createReview);
+router.put("/about/reviews/:id", validate(reviewSchema), updateReview);
+router.delete("/about/reviews/:id", deleteReview);
 
 /**
  * @swagger
@@ -443,16 +441,24 @@ router.delete('/about/reviews/:id', deleteReview);
  *     security:
  *       - bearerAuth: []
  */
-router.get('/resume', getResumeContent);
-router.post('/resume/skills', validate(skillSchema), createSkill);
-router.put('/resume/skills/{id}', validate(skillSchema), updateSkill);
-router.delete('/resume/skills/{id}', deleteSkill);
-router.post('/resume/experiences', validate(experienceSchema), createExperience);
-router.put('/resume/experiences/{id}', validate(experienceSchema), updateExperience);
-router.delete('/resume/experiences/{id}', deleteExperience);
-router.post('/resume/education', validate(educationSchema), createEducation);
-router.put('/resume/education/{id}', validate(educationSchema), updateEducation);
-router.delete('/resume/education/{id}', deleteEducation);
+router.get("/resume", getResumeContent);
+router.post("/resume/skills", validate(skillSchema), createSkill);
+router.put("/resume/skills/:id", validate(skillSchema), updateSkill);
+router.delete("/resume/skills/:id", deleteSkill);
+router.post(
+  "/resume/experiences",
+  validate(experienceSchema),
+  createExperience,
+);
+router.put(
+  "/resume/experiences/:id",
+  validate(experienceSchema),
+  updateExperience,
+);
+router.delete("/resume/experiences/:id", deleteExperience);
+router.post("/resume/education", validate(educationSchema), createEducation);
+router.put("/resume/education/:id", validate(educationSchema), updateEducation);
+router.delete("/resume/education/:id", deleteEducation);
 
 /**
  * @swagger
@@ -474,25 +480,25 @@ router.delete('/resume/education/{id}', deleteEducation);
  *           schema:
  *             $ref: '#/components/schemas/Project'
  */
-router.get('/projects', getProjects);
+router.get("/projects", getProjects);
 router.post(
-  '/projects',
-  createImageFieldsUpload([{ name: 'image', maxCount: 1 }]),
-  mapUploadedImages({ image: 'imageUrl' }, 'projects'),
+  "/projects",
+  createImageFieldsUpload([{ name: "image", maxCount: 1 }]),
+  mapUploadedImages({ image: "imageUrl" }, "projects"),
   normalizeProjectMultipart,
   validate(projectSchema),
-  createProject
+  createProject,
 );
-router.get('/projects/:id', getProjectById);
+router.get("/projects/:id", getProjectById);
 router.put(
-  '/projects/:id',
-  createImageFieldsUpload([{ name: 'image', maxCount: 1 }]),
-  mapUploadedImages({ image: 'imageUrl' }, 'projects'),
+  "/projects/:id",
+  createImageFieldsUpload([{ name: "image", maxCount: 1 }]),
+  mapUploadedImages({ image: "imageUrl" }, "projects"),
   normalizeProjectMultipart,
   validate(projectSchema),
-  updateProject
+  updateProject,
 );
-router.delete('/projects/:id', deleteProject);
+router.delete("/projects/:id", deleteProject);
 
 /**
  * @swagger
@@ -514,25 +520,25 @@ router.delete('/projects/:id', deleteProject);
  *           schema:
  *             $ref: '#/components/schemas/Blog'
  */
-router.get('/blogs', getBlogs);
+router.get("/blogs", getBlogs);
 router.post(
-  '/blogs',
-  createImageFieldsUpload([{ name: 'coverImageFile', maxCount: 1 }]),
-  mapUploadedImages({ coverImageFile: 'coverImage' }, 'blogs'),
+  "/blogs",
+  createImageFieldsUpload([{ name: "coverImageFile", maxCount: 1 }]),
+  mapUploadedImages({ coverImageFile: "coverImage" }, "blogs"),
   normalizeBlogMultipart,
   validate(blogSchema),
-  createBlog
+  createBlog,
 );
-router.get('/blogs/:id', getBlogById);
+router.get("/blogs/:id", getBlogById);
 router.put(
-  '/blogs/:id',
-  createImageFieldsUpload([{ name: 'coverImageFile', maxCount: 1 }]),
-  mapUploadedImages({ coverImageFile: 'coverImage' }, 'blogs'),
+  "/blogs/:id",
+  createImageFieldsUpload([{ name: "coverImageFile", maxCount: 1 }]),
+  mapUploadedImages({ coverImageFile: "coverImage" }, "blogs"),
   normalizeBlogMultipart,
   validate(blogSchema),
-  updateBlog
+  updateBlog,
 );
-router.delete('/blogs/:id', deleteBlog);
+router.delete("/blogs/:id", deleteBlog);
 
 /**
  * @swagger
@@ -543,7 +549,7 @@ router.delete('/blogs/:id', deleteBlog);
  *     security:
  *       - bearerAuth: []
  */
-router.get('/messages', getMessages);
+router.get("/messages", getMessages);
 
 /**
  * @swagger
@@ -565,16 +571,20 @@ router.get('/messages', getMessages);
  *           schema:
  *             $ref: '#/components/schemas/SiteSetting'
  */
-router.get('/settings', getSiteSetting);
+router.get("/settings", getSiteSetting);
 router.put(
-  '/settings',
-  createImageFieldsUpload([{ name: 'logo', maxCount: 1 }]),
-  mapUploadedImages({ logo: 'logoUrl' }, 'settings'),
+  "/settings",
+  createImageFieldsUpload([{ name: "logo", maxCount: 1 }]),
+  mapUploadedImages({ logo: "logoUrl" }, "settings"),
   normalizeSettingsMultipart,
   validate(siteSettingSchema),
-  updateSiteSetting
+  updateSiteSetting,
 );
-router.get('/system-settings', getSystemSetting);
-router.put('/system-settings', validate(systemSettingSchema), updateSystemSetting);
+router.get("/system-settings", getSystemSetting);
+router.put(
+  "/system-settings",
+  validate(systemSettingSchema),
+  updateSystemSetting,
+);
 
 export default router;

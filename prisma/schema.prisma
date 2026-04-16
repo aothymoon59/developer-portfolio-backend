@@ -108,11 +108,11 @@ model Experience {
   id          String   @id @default(cuid())
   company     String
   position    String
+  department  String?
   startDate   DateTime
   endDate     DateTime?
   isCurrent   Boolean  @default(false)
   description String?
-  technologies String[]
   sortOrder   Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
