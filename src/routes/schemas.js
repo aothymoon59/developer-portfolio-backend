@@ -1,20 +1,20 @@
-import { z } from 'zod';
+import { z } from "zod";
 
-const optionalUrl = z.string().url().optional().or(z.literal(''));
-const optionalString = z.string().optional().or(z.literal(''));
+const optionalUrl = z.string().url().optional().or(z.literal(""));
+const optionalString = z.string().optional().or(z.literal(""));
 const stringArray = z.array(z.string().min(1)).optional().default([]);
 const nullableDate = z.coerce.date().optional().nullable();
 
 const linkItemSchema = z.object({
   label: z.string().min(1),
-  url: z.string().url()
+  url: z.string().url(),
 });
 
 export const loginSchema = z.object({
   body: z.object({
     email: z.string().email(),
-    password: z.string().min(6)
-  })
+    password: z.string().min(6),
+  }),
 });
 
 export const contactMessageSchema = z.object({
@@ -22,8 +22,8 @@ export const contactMessageSchema = z.object({
     name: z.string().min(2),
     email: z.string().email(),
     subject: optionalString,
-    message: z.string().min(10)
-  })
+    message: z.string().min(10),
+  }),
 });
 
 export const homeContentSchema = z.object({
@@ -32,19 +32,19 @@ export const homeContentSchema = z.object({
     jobTitle: z.string().min(2),
     homeDescription: z.string().min(10),
     heroTitle: optionalString,
-    heroSubtitle: optionalString
-  })
+    heroSubtitle: optionalString,
+  }),
 });
 
 export const aboutContentSchema = z.object({
   body: z.object({
     aboutTitle: z.string().min(2),
     aboutDescription: z.string().min(10),
-    aboutDetails: z.string().min(10),
+    aboutDetails: z.string().min(10).optional(),
     aboutImageUrl: optionalUrl,
     aboutImageLgUrl: optionalUrl,
-    cvUrl: optionalUrl
-  })
+    cvUrl: optionalUrl,
+  }),
 });
 
 export const serviceSchema = z.object({
@@ -52,8 +52,8 @@ export const serviceSchema = z.object({
     imageUrl: optionalUrl,
     title: z.string().min(2),
     description: z.string().min(10),
-    sortOrder: z.number().int().optional().default(0)
-  })
+    sortOrder: z.number().int().optional().default(0),
+  }),
 });
 
 export const reviewSchema = z.object({
@@ -63,15 +63,15 @@ export const reviewSchema = z.object({
     reviewerName: z.string().min(2),
     reviewerTitle: optionalString,
     officeName: optionalString,
-    sortOrder: z.number().int().optional().default(0)
-  })
+    sortOrder: z.number().int().optional().default(0),
+  }),
 });
 
 export const siteSettingSchema = z.object({
   body: z.object({
     siteTitle: z.string().min(2),
     logoUrl: optionalUrl,
-    email: z.string().email().optional().or(z.literal('')),
+    email: z.string().email().optional().or(z.literal("")),
     phone: optionalString,
     location: optionalString,
     contactDescription: optionalString,
@@ -82,8 +82,8 @@ export const siteSettingSchema = z.object({
     facebookUrl: optionalUrl,
     twitterUrl: optionalUrl,
     instagramUrl: optionalUrl,
-    youtubeUrl: optionalUrl
-  })
+    youtubeUrl: optionalUrl,
+  }),
 });
 
 export const systemSettingSchema = z.object({
@@ -98,8 +98,8 @@ export const systemSettingSchema = z.object({
     smtpUser: optionalString,
     smtpPass: optionalString,
     mailFrom: optionalString,
-    adminNotificationEmail: z.string().email().optional().or(z.literal(''))
-  })
+    adminNotificationEmail: z.string().email().optional().or(z.literal("")),
+  }),
 });
 
 export const skillSchema = z.object({
@@ -108,8 +108,8 @@ export const skillSchema = z.object({
     category: optionalString,
     level: z.number().int().min(1).max(100).optional().nullable(),
     icon: optionalString,
-    sortOrder: z.number().int().optional().default(0)
-  })
+    sortOrder: z.number().int().optional().default(0),
+  }),
 });
 
 export const experienceSchema = z.object({
@@ -121,8 +121,8 @@ export const experienceSchema = z.object({
     isCurrent: z.boolean().optional().default(false),
     description: z.string().min(10),
     technologies: stringArray,
-    sortOrder: z.number().int().optional().default(0)
-  })
+    sortOrder: z.number().int().optional().default(0),
+  }),
 });
 
 export const educationSchema = z.object({
@@ -134,8 +134,8 @@ export const educationSchema = z.object({
     endDate: nullableDate,
     grade: optionalString,
     description: z.string().min(10),
-    sortOrder: z.number().int().optional().default(0)
-  })
+    sortOrder: z.number().int().optional().default(0),
+  }),
 });
 
 export const projectSchema = z.object({
@@ -143,7 +143,7 @@ export const projectSchema = z.object({
     title: z.string().min(2),
     slug: z.string().min(2),
     subTitle: z.string().min(2),
-    summary: z.string().min(2).optional().or(z.literal('')),
+    summary: z.string().min(2).optional().or(z.literal("")),
     description: z.string().min(10),
     imageUrl: optionalUrl,
     liveUrl: optionalUrl,
@@ -154,8 +154,8 @@ export const projectSchema = z.object({
     featured: z.boolean().optional().default(false),
     sortOrder: z.number().int().optional().default(0),
     technology: stringArray,
-    skills: stringArray
-  })
+    skills: stringArray,
+  }),
 });
 
 export const blogSchema = z.object({
@@ -168,6 +168,6 @@ export const blogSchema = z.object({
     coverImage: optionalUrl,
     tags: stringArray,
     published: z.boolean().optional().default(false),
-    publishedAt: nullableDate
-  })
+    publishedAt: nullableDate,
+  }),
 });
