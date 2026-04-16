@@ -32,6 +32,17 @@ model User {
 model SiteSetting {
   id             String   @id @default(cuid())
   siteTitle      String
+  cloudinaryCloudName String?
+  cloudinaryApiKey String?
+  cloudinaryApiSecret String?
+  cloudinaryFolder String?
+  smtpHost      String?
+  smtpPort      Int?
+  smtpSecure    Boolean  @default(false)
+  smtpUser      String?
+  smtpPass      String?
+  mailFrom      String?
+  adminNotificationEmail String?
   logoUrl        String?
   fullName       String?
   jobTitle       String?

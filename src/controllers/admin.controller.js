@@ -3,6 +3,7 @@ import { prisma } from '../config/prisma.js';
 import { ApiError } from '../utils/ApiError.js';
 import { catchAsync } from '../utils/catchAsync.js';
 import { ensureUniqueSlug } from '../utils/slug.js';
+import { getRuntimeSystemSettings } from '../utils/systemSettings.js';
 
 const defaultSiteSetting = {
   siteTitle: 'Developer Portfolio',
@@ -407,4 +408,49 @@ export const updateSiteSetting = catchAsync(async (req, res) => {
   });
 
   res.status(StatusCodes.OK).json({ success: true, data: updated });
+});
+
+export const getSystemSetting = catchAsync(async (_req, res) => {
+  const settings = await getRuntimeSystemSettings();
+  res.status(StatusCodes.OK).json({
+    success: true,
+    data: pick(settings, [
+      'cloudinaryCloudName',
+      'cloudinaryApiKey',
+      'cloudinaryApiSecret',
+      'cloudinaryFolder',
+      'smtpHost',
+      'smtpPort',
+      'smtpSecure',
+      'smtpUser',
+      'smtpPass',
+      'mailFrom',
+      'adminNotificationEmail'
+    ])
+  });
+});
+
+export const updateSystemSetting = catchAsync(async (req, res) => {
+  const siteSetting = await getOrCreateSiteSetting();
+  const updated = await prisma.siteSetting.update({
+    where: { id: siteSetting.id },
+    data: req.validated.body
+  });
+
+  res.status(StatusCodes.OK).json({
+    success: true,
+    data: pick(updated, [
+      'cloudinaryCloudName',
+      'cloudinaryApiKey',
+      'cloudinaryApiSecret',
+      'cloudinaryFolder',
+      'smtpHost',
+      'smtpPort',
+      'smtpSecure',
+      'smtpUser',
+      'smtpPass',
+      'mailFrom',
+      'adminNotificationEmail'
+    ])
+  });
 });

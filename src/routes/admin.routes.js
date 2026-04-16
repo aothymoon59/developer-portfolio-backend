@@ -24,6 +24,7 @@ import {
   getProjects,
   getResumeContent,
   getSiteSetting,
+  getSystemSetting,
   updateAboutContent,
   updateBlog,
   updateEducation,
@@ -33,6 +34,7 @@ import {
   updateReview,
   updateService,
   updateSiteSetting,
+  updateSystemSetting,
   updateSkill
 } from '../controllers/admin.controller.js';
 import { uploadImage } from '../controllers/upload.controller.js';
@@ -59,6 +61,7 @@ import {
   reviewSchema,
   serviceSchema,
   siteSettingSchema,
+  systemSettingSchema,
   skillSchema
 } from './schemas.js';
 
@@ -571,5 +574,7 @@ router.put(
   validate(siteSettingSchema),
   updateSiteSetting
 );
+router.get('/system-settings', getSystemSetting);
+router.put('/system-settings', validate(systemSettingSchema), updateSystemSetting);
 
 export default router;

@@ -1,28 +1,35 @@
 import nodemailer from 'nodemailer';
-import { env } from '../config/env.js';
+import { getRuntimeSystemSettings } from './systemSettings.js';
 
-const canSendMail = () =>
-  Boolean(env.smtpHost && env.smtpPort && env.smtpUser && env.smtpPass && env.adminNotificationEmail);
+const canSendMail = (settings) =>
+  Boolean(
+    settings.smtpHost &&
+      settings.smtpPort &&
+      settings.smtpUser &&
+      settings.smtpPass &&
+      settings.adminNotificationEmail
+  );
 
-const createTransporter = () =>
+const createTransporter = (settings) =>
   nodemailer.createTransport({
-    host: env.smtpHost,
-    port: env.smtpPort,
-    secure: env.smtpSecure,
+    host: settings.smtpHost,
+    port: Number(settings.smtpPort),
+    secure: Boolean(settings.smtpSecure),
     auth: {
-      user: env.smtpUser,
-      pass: env.smtpPass
+      user: settings.smtpUser,
+      pass: settings.smtpPass
     }
   });
 
 export const sendAdminContactNotification = async (payload) => {
-  if (!canSendMail()) return { skipped: true };
+  const settings = await getRuntimeSystemSettings();
+  if (!canSendMail(settings)) return { skipped: true };
 
-  const transporter = createTransporter();
+  const transporter = createTransporter(settings);
 
   await transporter.sendMail({
-    from: env.mailFrom,
-    to: env.adminNotificationEmail,
+    from: settings.mailFrom,
+    to: settings.adminNotificationEmail,
     subject: `New Portfolio Contact: ${payload.subject || 'No subject'}`,
     replyTo: payload.email,
     html: `

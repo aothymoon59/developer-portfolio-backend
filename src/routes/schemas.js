@@ -86,6 +86,22 @@ export const siteSettingSchema = z.object({
   })
 });
 
+export const systemSettingSchema = z.object({
+  body: z.object({
+    cloudinaryCloudName: optionalString,
+    cloudinaryApiKey: optionalString,
+    cloudinaryApiSecret: optionalString,
+    cloudinaryFolder: optionalString,
+    smtpHost: optionalString,
+    smtpPort: z.coerce.number().int().optional().nullable(),
+    smtpSecure: z.coerce.boolean().optional().default(false),
+    smtpUser: optionalString,
+    smtpPass: optionalString,
+    mailFrom: optionalString,
+    adminNotificationEmail: z.string().email().optional().or(z.literal(''))
+  })
+});
+
 export const skillSchema = z.object({
   body: z.object({
     name: z.string().min(2),

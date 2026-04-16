@@ -1,8 +1,8 @@
 import multer from 'multer';
 import { StatusCodes } from 'http-status-codes';
 import { ApiError } from '../utils/ApiError.js';
-import { env } from '../config/env.js';
-import { cloudinary } from '../config/cloudinary.js';
+import { cloudinary, configureCloudinary } from '../config/cloudinary.js';
+import { getRuntimeSystemSettings } from '../utils/systemSettings.js';
 
 const fileFilter = (_req, file, cb) => {
   if (!file.mimetype.startsWith('image/')) {
@@ -31,13 +31,18 @@ export const createImageFieldsUpload = (fields) =>
   }).fields(fields);
 
 const uploadBufferToCloudinary = async (file, folderSuffix = '') => {
-  if (!env.cloudinaryCloudName || !env.cloudinaryApiKey || !env.cloudinaryApiSecret) {
+  const settings = await getRuntimeSystemSettings();
+  if (!settings.cloudinaryCloudName || !settings.cloudinaryApiKey || !settings.cloudinaryApiSecret) {
     throw new ApiError(StatusCodes.BAD_REQUEST, 'Cloudinary credentials are not configured');
   }
 
+  configureCloudinary(settings);
+
   const dataUri = `data:${file.mimetype};base64,${file.buffer.toString('base64')}`;
   return cloudinary.uploader.upload(dataUri, {
-    folder: folderSuffix ? `${env.cloudinaryFolder}/${folderSuffix}` : env.cloudinaryFolder,
+    folder: folderSuffix
+      ? `${settings.cloudinaryFolder || 'developer-portfolio'}/${folderSuffix}`
+      : settings.cloudinaryFolder || 'developer-portfolio',
     resource_type: 'image'
   });
 };
