@@ -2,6 +2,7 @@ import { StatusCodes } from 'http-status-codes';
 import { prisma } from '../config/prisma.js';
 import { ApiError } from '../utils/ApiError.js';
 import { catchAsync } from '../utils/catchAsync.js';
+import { ensureUniqueSlug } from '../utils/slug.js';
 
 const defaultSiteSetting = {
   siteTitle: 'Developer Portfolio',
@@ -283,15 +284,30 @@ export const getProjectById = catchAsync(async (req, res) => {
 });
 
 export const createProject = catchAsync(async (req, res) => {
-  const project = await prisma.project.create({ data: req.validated.body });
+  const slug = await ensureUniqueSlug(prisma.project, req.validated.body.title, req.validated.body.slug);
+  const project = await prisma.project.create({
+    data: {
+      ...req.validated.body,
+      slug
+    }
+  });
   res.status(StatusCodes.CREATED).json({ success: true, data: project });
 });
 
 export const updateProject = catchAsync(async (req, res) => {
   await ensureEntity(prisma.project, req.params.id, 'Project');
+  const slug = await ensureUniqueSlug(
+    prisma.project,
+    req.validated.body.title,
+    req.validated.body.slug,
+    req.params.id
+  );
   const project = await prisma.project.update({
     where: { id: req.params.id },
-    data: req.validated.body
+    data: {
+      ...req.validated.body,
+      slug
+    }
   });
   res.status(StatusCodes.OK).json({ success: true, data: project });
 });
@@ -326,15 +342,30 @@ export const getBlogById = catchAsync(async (req, res) => {
 });
 
 export const createBlog = catchAsync(async (req, res) => {
-  const blog = await prisma.blogPost.create({ data: req.validated.body });
+  const slug = await ensureUniqueSlug(prisma.blogPost, req.validated.body.title, req.validated.body.slug);
+  const blog = await prisma.blogPost.create({
+    data: {
+      ...req.validated.body,
+      slug
+    }
+  });
   res.status(StatusCodes.CREATED).json({ success: true, data: blog });
 });
 
 export const updateBlog = catchAsync(async (req, res) => {
   await ensureEntity(prisma.blogPost, req.params.id, 'Blog');
+  const slug = await ensureUniqueSlug(
+    prisma.blogPost,
+    req.validated.body.title,
+    req.validated.body.slug,
+    req.params.id
+  );
   const blog = await prisma.blogPost.update({
     where: { id: req.params.id },
-    data: req.validated.body
+    data: {
+      ...req.validated.body,
+      slug
+    }
   });
   res.status(StatusCodes.OK).json({ success: true, data: blog });
 });
