@@ -32,6 +32,8 @@ async function main() {
       data: {
         siteTitle: "Developer Portfolio",
         logoUrl: "/images/brand-image.jpg",
+        faviconUrl: "/favicon.ico",
+        footerCopyright: "All rights reserved.",
         fullName: "Aothy Mahamud Moon",
         jobTitle: "Software Developer",
         homeDescription:

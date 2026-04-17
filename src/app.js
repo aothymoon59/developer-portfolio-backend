@@ -5,13 +5,10 @@ import morgan from "morgan";
 import rateLimit from "express-rate-limit";
 
 import { env } from "./config/env.js";
-import { errorHandler } from "./middlewares/errorHandler.js";
-import { notFound } from "./middlewares/notFound.js";
-import authRoutes from "./routes/auth.routes.js";
-import portfolioRoutes from "./routes/portfolio.routes.js";
-import adminRoutes from "./routes/admin.routes.js";
-import messageRoutes from "./routes/message.routes.js";
-import { swaggerSpec, swaggerUi } from "./utils/swagger.js";
+import { errorHandler } from "./common/middlewares/errorHandler.js";
+import { notFound } from "./common/middlewares/notFound.js";
+import { swaggerSpec, swaggerUi } from "./docs/swagger.js";
+import { registerRoutes } from "./routes/index.js";
 
 const app = express();
 
@@ -34,10 +31,7 @@ app.get("/", (_req, res) => {
 });
 
 app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-app.use("/api/v1/auth", authRoutes);
-app.use("/api/v1/portfolio", portfolioRoutes);
-app.use("/api/v1/messages", messageRoutes);
-app.use("/api/v1/admin", adminRoutes);
+registerRoutes(app);
 
 app.use(notFound);
 app.use(errorHandler);
