@@ -3,7 +3,7 @@ import { getProjects } from "../controllers/projects.controller.js";
 import { getSkills } from "../controllers/skills.controller.js";
 import { getExperiences } from "../controllers/experiences.controller.js";
 import { getEducation } from "../controllers/education.controller.js";
-import { getBlogs } from "../controllers/blogs.controller.js";
+import { getBlogs, getBlogById } from "../controllers/blogs.controller.js";
 import { getServices } from "../controllers/services.controller.js";
 import { getReviews } from "../controllers/reviews.controller.js";
 import { getPublicSiteSettings } from "../controllers/siteSettings.controller.js";
@@ -124,6 +124,36 @@ router.get("/education", getEducation);
  *                     $ref: '#/components/schemas/BlogPost'
  */
 router.get("/blogs", getBlogs);
+
+/**
+ * @swagger
+ * /api/v1/portfolio/blogs/{id}:
+ *   get:
+ *     summary: Get a published blog by ID
+ *     tags: [Portfolio]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Blog ID
+ *     responses:
+ *       200:
+ *         description: Returns the blog post
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   $ref: '#/components/schemas/BlogPost'
+ *       404:
+ *         description: Blog not found
+ */
+router.get("/blogs/:id", getBlogById);
 
 /**
  * @swagger

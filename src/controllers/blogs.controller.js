@@ -13,3 +13,26 @@ export const getBlogs = catchAsync(async (_req, res) => {
     data: blogs,
   });
 });
+
+export const getBlogById = catchAsync(async (req, res) => {
+  const { id } = req.params;
+
+  const blog = await prisma.blogPost.findFirst({
+    where: {
+      id: id,
+      published: true,
+    },
+  });
+
+  if (!blog) {
+    return res.status(StatusCodes.NOT_FOUND).json({
+      success: false,
+      message: "Blog not found",
+    });
+  }
+
+  res.status(StatusCodes.OK).json({
+    success: true,
+    data: blog,
+  });
+});
