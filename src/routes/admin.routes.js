@@ -284,6 +284,10 @@ const router = Router();
  *           type: string
  *         logoUrl:
  *           type: string
+ *         faviconUrl:
+ *           type: string
+ *         footerCopyright:
+ *           type: string
  *         email:
  *           type: string
  *         phone:
@@ -583,6 +587,8 @@ router.put(
 router.get("/system-settings", getSystemSetting);
 router.put(
   "/system-settings",
+  createImageFieldsUpload([{ name: "favicon", maxCount: 1 }]),
+  mapUploadedImages({ favicon: "faviconUrl" }, "settings"),
   validate(systemSettingSchema),
   updateSystemSetting,
 );

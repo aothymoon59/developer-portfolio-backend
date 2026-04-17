@@ -92,6 +92,8 @@ export const systemSettingSchema = z.object({
     cloudinaryApiKey: optionalString,
     cloudinaryApiSecret: optionalString,
     cloudinaryFolder: optionalString,
+    faviconUrl: optionalUrl,
+    footerCopyright: optionalString,
     smtpHost: optionalString,
     smtpPort: z.coerce.number().int().optional().nullable(),
     smtpSecure: z.coerce.boolean().optional().default(false),
@@ -167,6 +169,5 @@ export const blogSchema = z.object({
     coverImage: optionalUrl,
     tags: stringArray,
     published: z.boolean().optional().default(false),
-    publishedAt: nullableDate,
   }),
 });

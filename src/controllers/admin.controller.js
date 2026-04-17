@@ -7,8 +7,21 @@ import { getRuntimeSystemSettings } from "../utils/systemSettings.js";
 
 const defaultSiteSetting = {
   siteTitle: "Developer Portfolio",
+  footerCopyright: "All rights reserved.",
   phoneNumbers: [],
   emailAddresses: [],
+};
+
+const withPublishedTimestamp = (payload, existingBlog = null) => {
+  const nextPayload = { ...payload };
+
+  if (payload.published) {
+    nextPayload.publishedAt = existingBlog?.publishedAt || existingBlog?.createdAt || new Date();
+  } else {
+    nextPayload.publishedAt = null;
+  }
+
+  return nextPayload;
 };
 
 const pick = (source, keys) =>
@@ -408,17 +421,23 @@ export const createBlog = catchAsync(async (req, res) => {
     req.validated.body.title,
     req.validated.body.slug,
   );
-  const blog = await prisma.blogPost.create({
+  const createdBlog = await prisma.blogPost.create({
     data: {
       ...req.validated.body,
       slug,
     },
   });
+  const blog = req.validated.body.published
+    ? await prisma.blogPost.update({
+        where: { id: createdBlog.id },
+        data: { publishedAt: createdBlog.createdAt },
+      })
+    : createdBlog;
   res.status(StatusCodes.CREATED).json({ success: true, data: blog });
 });
 
 export const updateBlog = catchAsync(async (req, res) => {
-  await ensureEntity(prisma.blogPost, req.params.id, "Blog");
+  const existingBlog = await ensureEntity(prisma.blogPost, req.params.id, "Blog");
   const slug = await ensureUniqueSlug(
     prisma.blogPost,
     req.validated.body.title,
@@ -428,7 +447,7 @@ export const updateBlog = catchAsync(async (req, res) => {
   const blog = await prisma.blogPost.update({
     where: { id: req.params.id },
     data: {
-      ...req.validated.body,
+      ...withPublishedTimestamp(req.validated.body, existingBlog),
       slug,
     },
   });
@@ -485,6 +504,8 @@ export const getSystemSetting = catchAsync(async (_req, res) => {
       "cloudinaryApiKey",
       "cloudinaryApiSecret",
       "cloudinaryFolder",
+      "faviconUrl",
+      "footerCopyright",
       "smtpHost",
       "smtpPort",
       "smtpSecure",
@@ -510,6 +531,8 @@ export const updateSystemSetting = catchAsync(async (req, res) => {
       "cloudinaryApiKey",
       "cloudinaryApiSecret",
       "cloudinaryFolder",
+      "faviconUrl",
+      "footerCopyright",
       "smtpHost",
       "smtpPort",
       "smtpSecure",

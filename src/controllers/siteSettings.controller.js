@@ -7,6 +7,8 @@ export const getPublicSiteSettings = catchAsync(async (_req, res) => {
     select: {
       siteTitle: true,
       logoUrl: true,
+      faviconUrl: true,
+      footerCopyright: true,
       fullName: true,
       jobTitle: true,
       homeDescription: true,

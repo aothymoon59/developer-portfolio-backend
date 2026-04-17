@@ -135,6 +135,8 @@ const options = {
           properties: {
             siteTitle: { type: "string" },
             logoUrl: { type: "string" },
+            faviconUrl: { type: "string" },
+            footerCopyright: { type: "string" },
             fullName: { type: "string" },
             jobTitle: { type: "string" },
             homeDescription: { type: "string" },

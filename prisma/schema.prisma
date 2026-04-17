@@ -32,6 +32,8 @@ model User {
 model SiteSetting {
   id             String   @id @default(cuid())
   siteTitle      String
+  faviconUrl     String?
+  footerCopyright String?
   cloudinaryCloudName String?
   cloudinaryApiKey String?
   cloudinaryApiSecret String?
