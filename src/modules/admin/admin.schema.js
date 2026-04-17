@@ -171,3 +171,10 @@ export const blogSchema = z.object({
     published: z.boolean().optional().default(false),
   }),
 });
+
+export const replyMessageSchema = z.object({
+  body: z.object({
+    subject: z.string().min(2),
+    message: z.string().min(10),
+  }),
+});
