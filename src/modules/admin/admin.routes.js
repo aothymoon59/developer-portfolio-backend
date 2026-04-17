@@ -23,6 +23,7 @@ import {
   getProjectById,
   getProjects,
   getResumeContent,
+  replyToMessage,
   getSiteSetting,
   getSystemSetting,
   updateAboutContent,
@@ -58,6 +59,7 @@ import {
   experienceSchema,
   homeContentSchema,
   projectSchema,
+  replyMessageSchema,
   reviewSchema,
   serviceSchema,
   siteSettingSchema,
@@ -816,8 +818,60 @@ router.delete("/blogs/:id", deleteBlog);
  *     tags: [Admin]
  *     security:
  *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Paginated contact messages returned
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/ContactMessage'
+ *                 meta:
+ *                   $ref: '#/components/schemas/PaginationMeta'
  */
 router.get("/messages", getMessages);
+/**
+ * @swagger
+ * /api/v1/admin/messages/{id}/reply:
+ *   post:
+ *     summary: Send a reply email to a contact message sender
+ *     tags: [Admin]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ReplyMessage'
+ *     responses:
+ *       200:
+ *         description: Reply sent successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *                 data:
+ *                   $ref: '#/components/schemas/ContactMessage'
+ */
+router.post("/messages/:id/reply", validate(replyMessageSchema), replyToMessage);
 
 /**
  * @swagger

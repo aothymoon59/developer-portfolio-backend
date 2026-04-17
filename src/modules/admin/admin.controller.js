@@ -2,6 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import { prisma } from "../../config/prisma.js";
 import { ApiError } from "../../common/utils/ApiError.js";
 import { catchAsync } from "../../common/utils/catchAsync.js";
+import { sendContactReplyEmail } from "../../common/utils/mailer.js";
 import { ensureUniqueSlug } from "../../common/utils/slug.js";
 import { getRuntimeSystemSettings } from "../../common/utils/systemSettings.js";
 
@@ -477,6 +478,32 @@ export const getMessages = catchAsync(async (req, res) => {
     success: true,
     data: items,
     meta: buildPaginationMeta(page, limit, total),
+  });
+});
+
+export const replyToMessage = catchAsync(async (req, res) => {
+  const messageRecord = await ensureEntity(
+    prisma.contactMessage,
+    req.params.id,
+    "Message",
+  );
+
+  await sendContactReplyEmail({
+    name: messageRecord.name,
+    email: messageRecord.email,
+    subject: req.validated.body.subject,
+    message: req.validated.body.message,
+  });
+
+  const updated = await prisma.contactMessage.update({
+    where: { id: req.params.id },
+    data: { status: "REPLIED" },
+  });
+
+  res.status(StatusCodes.OK).json({
+    success: true,
+    message: "Reply sent successfully.",
+    data: updated,
   });
 });
 

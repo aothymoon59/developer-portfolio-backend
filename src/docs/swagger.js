@@ -209,6 +209,14 @@ const options = {
             updatedAt: { type: "string", format: "date-time" },
           },
         },
+        ReplyMessage: {
+          type: "object",
+          required: ["subject", "message"],
+          properties: {
+            subject: { type: "string" },
+            message: { type: "string" },
+          },
+        },
         SuccessResponse: {
           type: "object",
           properties: {
